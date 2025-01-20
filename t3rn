@@ -6,6 +6,28 @@ channel_logo() {
   echo -e '\e[0m'
   echo -e "\n🔥 Подписывайтесь на самый 🔥 канал в крипте: @cryptofire8 [🚀]"
 }
+restart_node() {
+  echo 'Начинаю перезапуск ноды...'
+
+  if screen -list | grep -q "\.t3rnnode"; then
+    screen -S t3rnnode -p 0 -X stuff "^C"
+    sleep 1
+    screen -S t3rnnode -p 0 -X stuff "./executor\n"
+    echo 'Нода успешно перезапущена!'
+  else
+    echo 'Сессия t3rnnode не найдена. Убедитесь, что нода установлена и запущена.'
+  fi
+}
+
+check_logs() {
+  if screen -list | grep -q "\.t3rnnode"; then
+    screen -S t3rnnode -X hardcopy /tmp/screen_log.txt
+    tail -n 50 /tmp/screen_log.txt
+    rm /tmp/screen_log.txt
+  else
+    echo 'Сессия t3rnnode не найдена. Логи недоступны.'
+  fi
+}
 
 update_node() {
   delete_node
